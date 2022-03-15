@@ -85,6 +85,7 @@ app.post('/bulkAdd', (req, res) => {
         }
     })
 
+return res.json("All the data is Successfully Added");
 
 });
 
