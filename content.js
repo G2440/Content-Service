@@ -29,12 +29,12 @@ app.post('/addSeries', (req, res) => {
     var db1 = new Content(singleContent);
     db1.save().then((response) => {
         var userID = response._id;
-        axios.get("http://localhost:8002/all").then((response) => {
+        axios.get("https://pratilipi-microservices.herokuapp.com/dailypassService/all").then((response) => {
             for (var j = 0; j < response.data.length; j++) {
                 var idObj = {
                     _id: response.data[j]._id
                 }
-                axios.post("http://localhost:8002/add/" + idObj._id + "/" + userID + "/" + 4);
+                axios.post("https://pratilipi-microservices.herokuapp.com/dailypassService/add/" + idObj._id + "/" + userID + "/" + 4);
             }
         }).catch((err) => {
             if (err) {
@@ -56,7 +56,7 @@ app.post('/bulkAdd', (req, res) => {
     var idObj = {};
 
     Content.insertMany(dataArr).then((docs) => {
-        axios.get("http://localhost:8002/all").then((response) => {
+        axios.get("https://pratilipi-microservices.herokuapp.com/dailypassService/all").then((response) => {
             for (var i = 0; i < dataArr.length; i++) {
                 newID = {
                     _id: docs[i]._id
@@ -68,7 +68,7 @@ app.post('/bulkAdd', (req, res) => {
                     idObj = {
                         _id: response.data[j]._id
                     }
-                    axios.post("http://localhost:8002/add/" + idObj._id + "/" + op._id + "/" + 4);
+                    axios.post("https://pratilipi-microservices.herokuapp.com/dailypassService/add/" + idObj._id + "/" + op._id + "/" + 4);
                 }
             }
 
@@ -112,9 +112,9 @@ app.get("/pickContent/:id", (req, res) => {
 
 app.get('/fetchSelective/:id/seriesIDs/', (req, res) => {
     var idArr = req.query.array;
-    axios.get("http://localhost:8002/scheduledUnlock");
+    axios.get("https://pratilipi-microservices.herokuapp.com/dailypassService/scheduledUnlock");
 
-    axios.get("http://localhost:8002/dailydata/" + req.params.id).then((response) => {
+    axios.get("https://pratilipi-microservices.herokuapp.com/dailypassService/dailydata/" + req.params.id).then((response) => {
         var val = (response.data);
         var obj = {
             _id: val._id,
@@ -158,6 +158,6 @@ app.get('/fetchSelective/:id/seriesIDs/', (req, res) => {
     })
 });
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT || 8001, () => {
     console.log("Started");
 })
