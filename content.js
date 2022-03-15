@@ -158,6 +158,6 @@ app.get('/fetchSelective/:id/seriesIDs/', (req, res) => {
     })
 });
 
-app.listen(8001, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log("Started");
 })
