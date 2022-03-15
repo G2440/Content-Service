@@ -4,6 +4,9 @@ const express = require("express"),
     cors = require("cors"),
     bodyParser = require("body-parser"),
     axios = require("axios");
+const cors = require('cors');
+app.use(cors());
+
 
 
 
