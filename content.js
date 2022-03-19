@@ -70,7 +70,9 @@ app.post('/bulkAdd', (req, res) => {
                     idObj = {
                         _id: response.data[j]._id
                     }
-                    axios.post("https://pratilipi-microservices.herokuapp.com/dailypassService/add/" + idObj._id + "/" + op._id);
+                    axios.post("https://pratilipi-microservices.herokuapp.com/dailypassService/add/" + idObj._id + "/" + op._id).then(()=>{
+                        console.log("New data added to the user");
+                    });
                 }
             }
 
@@ -115,7 +117,7 @@ app.get("/pickContent/:id", (req, res) => {
 
 app.get('/fetchSelective/:id/seriesIDs/', (req, res) => {
     var idArr = req.query.array;
-    axios.get("https://pratilipi-microservices.herokuapp.com/dailypassService/scheduledUnlock");
+    axios.get("https://pratilipi-microservices.herokuapp.com/dailypassService/scheduledUnlock").then(()=>{
 
     axios.get("https://pratilipi-microservices.herokuapp.com/dailypassService/dailydata/" + req.params.id).then((response) => {
         var val = (response.data);
@@ -137,7 +139,7 @@ app.get('/fetchSelective/:id/seriesIDs/', (req, res) => {
                         res.write("Name of the Series: " + content.bookName + '\n');
                         res.write("Number of Chapter in the Series: " + content.numChap + '\n');
                         res.write("Number of Unlocked Chapter in the Series: " + unlockedContent.num + '\n');
-                        for (var k = 0; k < content.data.length; k++) {
+                        for (var k = 0; k < unlockedContent.num; k++) {
                             res.write("Chapter Number : " + content.data[k].chapNum + '\n');
                             res.write("Chapter Title  : " + content.data[k].chapName + '\n');
                             res.write(content.data[k].story + '\n');
@@ -159,6 +161,8 @@ app.get('/fetchSelective/:id/seriesIDs/', (req, res) => {
         console.log("Daily Pass Service Error")
         console.log(err);
     })
+            })
+
 });
 
 app.listen(process.env.PORT || 8001, () => {
