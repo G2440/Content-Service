@@ -138,8 +138,8 @@ app.get('/fetchSelective/:id/seriesIDs/', (req, res) => {
                     if (content) {
                         res.write("Name of the Series: " + content.bookName + '\n');
                         res.write("Number of Chapter in the Series: " + content.numChap + '\n');
-                        res.write("Number of Unlocked Chapter in the Series: " + unlockedContent.num + '\n');
-                        for (var k = 0; k < unlockedContent.num; k++) {
+                        res.write("Number of Unlocked Chapter in the Series: " + content.NumChapUn + '\n');
+                        for (var k = 0; k < content.NumChapUn; k++) {
                             res.write("Chapter Number : " + content.data[k].chapNum + '\n');
                             res.write("Chapter Title  : " + content.data[k].chapName + '\n');
                             res.write(content.data[k].story + '\n');
