@@ -70,7 +70,7 @@ app.post('/bulkAdd', (req, res) => {
                     idObj = {
                         _id: response.data[j]._id
                     }
-                    axios.post("https://pratilipi-microservices.herokuapp.com/dailypassService/add/" + idObj._id + "/" + op._id + "/" + 4);
+                    axios.post("https://pratilipi-microservices.herokuapp.com/dailypassService/add/" + idObj._id + "/" + op._id);
                 }
             }
 
