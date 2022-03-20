@@ -36,7 +36,7 @@ app.post('/addSeries', (req, res) => {
                 var idObj = {
                     _id: response.data[j]._id
                 }
-                axios.post("https://pratilipi-microservices.herokuapp.com/dailypassService/add/" + idObj._id + "/" + userID + "/" + 4);
+                axios.post("https://pratilipi-microservices.herokuapp.com/dailypassService/add/" + idObj._id + "/" + userID);
             }
         }).catch((err) => {
             if (err) {
@@ -117,52 +117,43 @@ app.get("/pickContent/:id", (req, res) => {
 
 app.get('/fetchSelective/:id/seriesIDs/', (req, res) => {
     var idArr = req.query.array;
-    axios.get("https://pratilipi-microservices.herokuapp.com/dailypassService/scheduledUnlock").then(()=>{
+    var size = idArr.length;
+    var counter = 0;
+    axios.get("https://pratilipi-microservices.herokuapp.com/dailypassService/scheduledUnlock").then(() => {
+        for (var i = 0; i < size; i++) {
 
-    axios.get("https://pratilipi-microservices.herokuapp.com/dailypassService/dailydata/" + req.params.id).then((response) => {
-        var val = (response.data);
-        var obj = {
-            _id: val._id,
-            content: val.content
-        }
-        var unlockedContent;
-
-        for (var j = 0; j < obj.content.length; j++) {
-            var counter = 0;
-            var size = idArr.length;
-            if (idArr.includes(obj.content[j]._id)) {
-
-                unlockedContent = {
-                    num: obj.content[j].NumChapUn
+            axios.get("https://pratilipi-microservices.herokuapp.com/dailypassService/pickseries/" + req.params.id + "/" + idArr[i]).then((response) => {
+                var contentData = {
+                    id: response.data._id,
+                    num: response.data.NumChapUn
                 }
-                Content.findById(obj.content[j]._id).then((content) => {
-                    if (content) {
-                        res.write("Name of the Series: " + content.bookName + '\n');
-                        res.write("Number of Chapter in the Series: " + content.numChap + '\n');
-                        res.write("Number of Unlocked Chapter in the Series: " + unlockedContent.num + '\n');
-                        for (var k = 0; k < unlockedContent.num; k++) {
-                            res.write("Chapter Number : " + content.data[k].chapNum + '\n');
-                            res.write("Chapter Title  : " + content.data[k].chapName + '\n');
-                            res.write(content.data[k].story + '\n');
-                        }
-                        counter++;
-                        res.write('\n');
-                        if (size == counter)
-                            res.end();
+                Content.findById(contentData.id).then((content) => {
+                    res.write("Name of the Series: " + content.bookName + '\n');
+                    res.write("Number of Chapter in the Series: " + content.numChap + '\n');
+                    res.write("Number of Unlocked Chapter in the Series: " + contentData.num + '\n');
+                    for (var k = 0; k < contentData.num; k++) {
+                        res.write("Chapter Number : " + content.data[k].chapNum + '\n');
+                        res.write("Chapter Title  : " + content.data[k].chapName + '\n');
+                        res.write(content.data[k].story + '\n');
                     }
+                    counter++;
+                    res.write('\n');
+                    if (size == counter)
+                        res.end();
                 }).catch((err) => {
                     if (err) {
                         console.log("Error in Quering the database for Content");
                         console.log(err);
                     }
                 })
-            }
-        }
-    }).catch((err) => {
-        console.log("Daily Pass Service Error")
-        console.log(err);
-    })
+
+
+            }).catch((err) => {
+                console.log("Daily Pass Service Error")
+                console.log(err);
             })
+        }
+    })
 
 });
 
